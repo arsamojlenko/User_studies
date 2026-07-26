@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="max-width: 600px; margin: 40px auto;">
+    <h2>Questionnaire 2 - Placeholder </h2>
+    <p>Please answer the following questions. This is a placeholder.</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label>1. How motivated do you feel right now? (1–7)</label><br>
+            <input type="number" name="motivation" min="1" max="7" required style="width:80px; padding:6px;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label>2. Have you done similar matrix tests before?</label><br>
+            <select name="experience" required style="padding:6px;">
+                <option value="">-- please select --</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <label>3. Any comments? (optional)</label><br>
+            <textarea name="comments" rows="3" style="width:100%; padding:8px;"></textarea>
+        </div>
+
+        <button type="submit" style="padding:12px 30px; background:#007bff; color:white; border:none; border-radius:5px;">
+            Submit & Continue
+        </button>
+    </form>
+</div>
+
+{% endblock %}

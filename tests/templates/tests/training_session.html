@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load dict_extras %}
+
+<div style="max-width: 950px; margin: 0 auto;">
+
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h1>Training Session</h1>
+        <div>
+            <strong>Progress:</strong> {{ current_index|add:1 }} / {{ total_items }}
+            &nbsp;&nbsp;
+            <form method="post" action="{% url 'tests:stop_training' session.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" style="background:#dc3545; color:white; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;">
+                    Stop Training
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Streak of correctly answered items -->
+    {% if is_gamified %}
+    <div style="margin-bottom: 25px;">
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px;">
+            {% for item in items %}
+                {% with resp=session.responses|default_if_none:"" %}
+                    {% if resp %}
+                        {% with answer=resp|get_item:item.id %}
+                            {% if answer and answer.is_correct %}
+                                <div style="width: 28px; height: 28px; background: #28a745; border-radius: 4px;"
+                                     title="Correct"></div>
+                            {% else %}
+                                <div style="width: 28px; height: 28px; background: #ced4da; border-radius: 4px;"
+                                     title="Not answered / Incorrect"></div>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <div style="width: 28px; height: 28px; background: #ced4da; border-radius: 4px;"></div>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+        <p style="text-align: center; color: #555; font-size: 0.95em;">
+            Green = correct answer &nbsp;|&nbsp; Current longest streak: <strong id="longest-streak">{{ session.longest_streak|default:0 }}</strong>
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Puzzle Card -->
+    <div style="background:white; padding:30px; border-radius:12px; box-shadow:0 3px 15px rgba(0,0,0,0.1);">
+
+        <!-- 3×3 Matrix as img -->
+        <img src="{{ current_item.image.url }}"
+             alt="RPM Puzzle"
+             style="width:100%; max-width:720px; display:block; margin:0 auto 25px; border:1px solid #ddd;">
+
+        <!-- Question/explanation text -->
+        <div style="text-align:center; margin: 25px 0 30px 0; font-size:1.15em; line-height:1.5;">
+            <p style="margin-bottom:8px;">
+                <strong>Which image should appear in the blank space?</strong>
+            </p>
+            <p style="color:#555;">
+                Please select the image that best fits the pattern.
+            </p>
+        </div>
+
+        <!-- Choices with pictures + numbers -->
+        <div id="choices" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 900px; margin: 0 auto;">
+            {% for choice in current_item.choices.all %}
+                <div style="text-align:center;">
+                    <img src="{{ choice.image.url }}"
+                         alt="Choice {{ choice.index }}"
+                         style="width:100%; border:2px solid #ccc; border-radius:6px; margin-bottom:8px;">
+
+                    <button class="choice-btn"
+                            data-answer="{{ choice.index }}"
+                            style="width:100%; padding:12px; font-size:1.4em; font-weight:bold;
+                                   cursor:pointer; border:2px solid #007bff; background:white;
+                                   border-radius:6px; color:#000;">
+                        {{ choice.index }}
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Feedback -->
+        <div id="feedback" style="display:none; text-align:center; font-size:1.25em;
+                                  margin:30px 0 10px 0; padding:16px; border-radius:8px;"></div>
+
+        <!-- Navigation -->
+        <div style="display:flex; justify-content:space-between; margin-top:35px;">
+            {% if has_previous %}
+                <a href="?q={{ current_index|add:'-1' }}"
+                   style="padding:11px 22px; background:#6c757d; color:white; text-decoration:none; border-radius:6px;">
+                    ← Previous
+                </a>
+            {% else %}
+                <span></span>
+            {% endif %}
+
+            {% if has_next %}
+                <a href="?q={{ current_index|add:1 }}"
+                   style="padding:11px 22px; background:#007bff; color:white; text-decoration:none; border-radius:6px;">
+                    Next →
+                </a>
+            {% else %}
+                <span style="color:#28a745; font-weight:bold; padding-top:10px;">Last question</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+const sessionId = {{ session.id }};
+const itemId = {{ current_item.id }};
+const correctAnswer = "{{ current_item.correct_answer }}";
+const choiceButtons = document.querySelectorAll('.choice-btn');
+const feedbackDiv = document.getElementById('feedback');
+
+const allResponses = {{ responses_json|safe }};
+
+const previous = allResponses[String(itemId)] || null;
+
+function resetButtons() {
+    choiceButtons.forEach(btn => {
+        btn.disabled = false;
+        btn.style.background = 'white';
+        btn.style.color = '#000';
+        btn.style.borderColor = '#007bff';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+    });
+    feedbackDiv.style.display = 'none';
+}
+
+function highlightAnswer(userAnswer, isCorrect) {
+    choiceButtons.forEach(btn => {
+        const ans = btn.dataset.answer;
+        btn.disabled = true;
+        btn.style.cursor = 'default';
+
+        btn.style.background = 'white';
+        btn.style.color = '#000';
+        btn.style.borderColor = '#007bff';
+
+        if (ans === correctAnswer) {
+            btn.style.background = '#28a745';
+            btn.style.color = 'white';
+            btn.style.borderColor = '#28a745';
+        }
+
+        if (ans === String(userAnswer) && !isCorrect) {
+            btn.style.background = '#dc3545';
+            btn.style.color = 'white';
+            btn.style.borderColor = '#dc3545';
+        }
+    });
+
+    feedbackDiv.style.display = 'block';
+    if (isCorrect) {
+        feedbackDiv.style.background = '#d4edda';
+        feedbackDiv.style.color = '#155724';
+        feedbackDiv.innerHTML = '✓ Correct!';
+    } else {
+        feedbackDiv.style.background = '#f8d7da';
+        feedbackDiv.style.color = '#721c24';
+        feedbackDiv.innerHTML = `✗ Incorrect. The correct answer was <strong>Option ${correctAnswer}</strong>`;
+    }
+}
+
+
+if (previous) {
+    highlightAnswer(previous.user_answer, previous.is_correct);
+} else {
+    resetButtons();
+}
+
+// Click handler
+choiceButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+        if (this.disabled) return;
+
+        const answer = this.dataset.answer;
+
+        choiceButtons.forEach(b => b.disabled = true);
+
+        fetch(`/tests/session/${sessionId}/answer/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                item_id: itemId,
+                answer: answer
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            // 1. Show correct/incorrect feedback
+            highlightAnswer(answer, data.is_correct);
+
+            // 2. Update longest streak display
+            const streakEl = document.getElementById('longest-streak');
+            if (streakEl && data.longest_streak !== undefined) {
+                streakEl.textContent = data.longest_streak;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            resetButtons();
+        });
+    });
+});
+</script>
+
+{% endblock %}

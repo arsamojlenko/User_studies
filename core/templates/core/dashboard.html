@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Researcher Dashboard</h1>
+
+<p>Welcome, {{ user.username }}!</p>
+
+<h2>All Test Sessions</h2>
+{% if sessions %}
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Session Type</th>
+                <th>Condition</th>
+                <th>Score</th>
+                <th>Date</th>
+                <th>Time Spent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td>{{ session.user.username }}</td>
+                <td>{{ session.session_type }}</td>
+                <td>{{ session.condition }}</td>
+                <td>{{ session.score }}</td>
+                <td>{{ session.start_time|date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td>
+                    {% if s.total_time_seconds %}
+                        {{ s.total_time_seconds }} sec
+                    {% else %}
+                        still running
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No sessions yet. Participants haven't started testing.</p>
+{% endif %}
+
+<a href="{% url 'core:export_data' %}">Export Data as CSV</a>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ session.session_type|title }}</h1> <!-- - {{ session.condition|title }} -->
+
+<div id="timer">Time: <span id="time">0</span>s</div>
+
+<div id="items-container">
+  {% for item in items %}
+    <div class="item" data-item-id="{{ item.item_id }}" style="display:none;">
+      <img src="{{ item.image.url }}" alt="Matrix">
+    </div>
+  {% endfor %}
+</div>
+
+<button id="next-btn">Next</button>
+<button id="show-explanation" style="display:none;">Show Explanation</button>
+
+<script>
+
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="max-width: 650px; margin: 60px auto; text-align: center; line-height: 1.6;">
+    <h1>Thank you very much!</h1>
+
+    <p style="font-size: 1.2em; margin: 30px 0;">
+        You have successfully completed the entire study.
+    </p>
+
+    <p>Your data has been saved and will help us understand the effects of gamification on cognitive training.</p>
+
+    <p style="margin-top: 40px; color: #555;">
+        You can now close this window.<br>
+        If you have any questions, please contact the researcher.
+    </p>
+
+    <p style="margin-top: 50px;">
+        <a href="{% url 'core:dashboard' %}" style="padding: 12px 28px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+            Go to Dashboard
+        </a>
+    </p>
+</div>
+
+{% endblock %}

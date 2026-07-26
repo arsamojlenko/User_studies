@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="text-align: center; margin-top: 80px;">
+    <h1>Training</h1>
+    <p>Click the button below when you are ready to start.</p>
+
+    <form method="post" action="{% url 'tests:begin_training' %}">
+        {% csrf_token %}
+        <button type="submit" style="padding: 15px 40px; font-size: 1.2em; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;">
+            Start Training
+        </button>
+    </form>
+</div>
+
+{% endblock %}
