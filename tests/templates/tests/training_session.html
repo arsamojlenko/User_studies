@@ -105,7 +105,14 @@
                     Next →
                 </a>
             {% else %}
-                <span style="color:#28a745; font-weight:bold; padding-top:10px;">Last question</span>
+                <!-- Finish button -->
+                <form method="post" action="{% url 'tests:stop_training' session.id %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button type="submit"
+                            style="padding:11px 28px; background:#28a745; color:white; border:none; border-radius:6px; font-size:1.05em; cursor:pointer;">
+                        Finish
+                    </button>
+                </form>
             {% endif %}
         </div>
     </div>

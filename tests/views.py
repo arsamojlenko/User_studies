@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
 from datetime import date, timedelta
 from users.utils import get_next_step
+from users.utils import assign_condition_balanced
 
 @login_required
 def start_session(request, session_type):
@@ -126,6 +127,7 @@ def stop_training(request, session_id):
 
         if session.session_type == 'pretest' and profile.progress == 'questionnaire1':
             profile.progress = 'pretest'
+            assign_condition_balanced(request.user)
 
         elif session.session_type == 'training' and profile.progress == 'pretest':
             profile.progress = 'training1'

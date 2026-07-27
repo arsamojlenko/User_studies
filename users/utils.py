@@ -1,6 +1,9 @@
 from django.shortcuts import redirect
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.models import User
+from users.models import Profile
+import random
 
 def get_next_step(user):
     """Returns the correct URL name the user must go to next."""
@@ -32,3 +35,27 @@ def get_next_step(user):
         return 'users:final_thankyou'
     else:
         return 'core:dashboard'
+
+
+def assign_condition_balanced(user):
+    """
+    Randomly assigns the user to control or gamified so that the two groups
+    stay roughly equal in size.
+    """
+    profile = user.profile
+
+    # Count how many users are already in each group
+    control_count = Profile.objects.filter(condition='control').count()
+    gamified_count = Profile.objects.filter(condition='gamified').count()
+
+    if control_count < gamified_count:
+        chosen = 'control'
+    elif gamified_count < control_count:
+        chosen = 'gamified'
+    else:
+        # Equal size : random
+        chosen = random.choice(['control', 'gamified'])
+
+    profile.condition = chosen
+    profile.save(update_fields=['condition'])
+    return chosen
