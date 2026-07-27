@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="max-width: 750px; margin: 40px auto; line-height: 1.6;">
+    <h1>Terms and Conditions</h1>
+
+    <div style="background:#f8f9fa; padding:25px; border-radius:8px; margin:25px 0; max-height:400px; overflow-y:auto;">
+        <p>By participating in this study you agree that:</p>
+        <ul>
+            <li>Your responses and performance data will be stored anonymously for research purposes.</li>
+            <li>You can withdraw at any time by deleting your account.</li>
+            <li>The data will only be used for scientific analysis and will not be shared with third parties.</li>
+        </ul>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="display:flex; gap:20px; flex-wrap:wrap; margin-top:30px;">
+            <button type="submit" name="action" value="agree"
+                    style="padding:14px 28px; background:#28a745; color:white; border:none; border-radius:6px; font-size:1.05em;">
+                I have read and understood the terms and conditions – Start the study
+            </button>
+
+            <button type="submit" name="action" value="disagree"
+                    style="padding:14px 28px; background:#dc3545; color:white; border:none; border-radius:6px; font-size:1.05em;">
+                I disagree with the terms and conditions – End the study
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

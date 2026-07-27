@@ -11,6 +11,8 @@ def get_next_step(user):
     progress = profile.progress
 
     if progress == 'registered':
+        return 'users:terms'
+    if progress == 'terms_accepted':
         return 'users:questionnaire1'
     elif progress == 'questionnaire1':
         return 'tests:pretest'

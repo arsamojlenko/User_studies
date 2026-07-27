@@ -18,4 +18,6 @@ urlpatterns = [
     path('questionnaire3/', views.questionnaire3, name='questionnaire3'),
     path('instruction/', views.instruction, name='instruction'),
     path('final-thankyou/', views.final_thankyou, name='final_thankyou'),
+    path('terms/', views.terms_and_conditions, name='terms'),
+    path('study-declined/', views.study_declined, name='study_declined'),
 ]

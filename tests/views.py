@@ -13,9 +13,9 @@ from users.utils import assign_condition_balanced
 @login_required
 def start_session(request, session_type):
     user = request.user
-    condition = getattr(user, 'condition', 'control')  # Set this on user creation
+    condition = getattr(user, 'condition', 'control')
 
-    # Placeholder item selection
+    # Placeholder item selection TODO
     if session_type == 'pretest':
         items = list(RPMItem.objects.filter(set_number=1)[:12])
     elif session_type == 'posttest':
@@ -79,7 +79,7 @@ def begin_training(request):
         condition=condition,
         start_time=timezone.now()
     )
-    items = list(RPMItem.objects.all()[:12])
+    items = list(RPMItem.objects.all()[:3])
     session.items.set(items)
 
     return redirect('tests:training_session', session_id=session.id)

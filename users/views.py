@@ -169,3 +169,32 @@ def final_thankyou(request):
         profile.save()
 
     return render(request, 'users/final_thankyou.html')
+
+@login_required
+def terms_and_conditions(request):
+    profile = request.user.profile
+
+    # Only show this page right after registration
+    if profile.progress != 'registered':
+        return redirect(get_next_step(request.user))
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'agree':
+            profile.progress = 'terms_accepted'
+            profile.save()
+            return redirect(get_next_step(request.user))
+
+        elif action == 'disagree':
+            # End the study for this user
+            profile.progress = 'declined'
+            user = request.user
+            logout(request)
+            user.delete()
+            return redirect('users:study_declined')
+
+    return render(request, 'users/terms.html')
+
+def study_declined(request):
+    return render(request, 'users/study_declined.html')
