@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="max-width: 700px; margin: 50px auto; line-height: 1.6;">
+    <h1>What's next</h1>
+
+    <p>You finished the second test and can now proceed to the last one.
+        After that, further instructions will be given.</p>
+    <p>The same rules apply as before.</p>
+    <p>Reminder: </p>
+    <ul>
+        <li>There is no time limit.</li>
+        <li>Please answer the puzzles alone, without any external help, such as other people or AI.</li>
+        <li>You will see a series of matrix puzzles.</li>
+        <li>For each puzzle choose the image that best completes the pattern.</li>
+        <li>You can go back and forth between the puzzles, as long as you are in a test session.</li>
+        <li>You cannot go back to previous test sessions.</li>
+    </ul>
+
+    <p>Click the button below when you are ready.</p>
+
+    <form method="post" style="margin-top: 40px;">
+        {% csrf_token %}
+        <button type="submit" style="padding:14px 32px; background:#007bff; color:white; border:none; border-radius:6px; font-size:1.1em;">
+            Continue
+        </button>
+    </form>
+</div>
+
+{% endblock %}

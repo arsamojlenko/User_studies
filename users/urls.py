@@ -20,4 +20,7 @@ urlpatterns = [
     path('final-thankyou/', views.final_thankyou, name='final_thankyou'),
     path('terms/', views.terms_and_conditions, name='terms'),
     path('study-declined/', views.study_declined, name='study_declined'),
+    path('pretest-explanation/', views.pretest_explanation, name='pretest_explanation'),
+    path('post-pretest-explanation/', views.post_pretest_explanation, name='post_pretest_explanation'),
+    path('pre-posttest-explanation/', views.pre_posttest_explanation, name='pre_posttest_explanation'),
 ]

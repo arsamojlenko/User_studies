@@ -19,12 +19,16 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "Account created successfully!")
-            # Force the correct starting point
-            user.profile.progress = 'registered'
-            user.profile.save()
 
-            return redirect(get_next_step(user))  # ← important!
+            # Make sure progress starts correctly
+            profile = user.profile
+            profile.progress = 'registered'
+            profile.save()
+
+            print("Progress after registration:", user.profile.progress)
+            print("Next step would be:", get_next_step(user))
+
+            return redirect('users:terms')          # ← go directly to terms
     else:
         form = SimpleRegisterForm()
 
@@ -104,7 +108,7 @@ def questionnaire1(request):
     print("Current progress:", profile.progress)
     print("Expected: registered")
 
-    if profile.progress != 'registered':
+    if profile.progress != 'terms_accepted':
         print("→ Redirecting to", get_next_step(request.user))
         return redirect(get_next_step(request.user))
 
@@ -174,7 +178,6 @@ def final_thankyou(request):
 def terms_and_conditions(request):
     profile = request.user.profile
 
-    # Only show this page right after registration
     if profile.progress != 'registered':
         return redirect(get_next_step(request.user))
 
@@ -187,8 +190,6 @@ def terms_and_conditions(request):
             return redirect(get_next_step(request.user))
 
         elif action == 'disagree':
-            # End the study for this user
-            profile.progress = 'declined'
             user = request.user
             logout(request)
             user.delete()
@@ -198,3 +199,44 @@ def terms_and_conditions(request):
 
 def study_declined(request):
     return render(request, 'users/study_declined.html')
+
+@login_required
+def pretest_explanation(request):
+    profile = request.user.profile
+
+    if profile.progress != 'questionnaire1':
+        return redirect(get_next_step(request.user))
+
+    if request.method == 'POST':
+        profile.progress = 'pretest_explanation'
+        profile.save()
+        return redirect(get_next_step(request.user))
+
+    return render(request, 'users/pretest_explanation.html')
+
+@login_required
+def post_pretest_explanation(request):
+    profile = request.user.profile
+    if profile.progress != 'pretest':
+        return redirect(get_next_step(request.user))
+
+    if request.method == 'POST':
+        profile.progress = 'post_pretest_explanation'
+        profile.save()
+        return redirect(get_next_step(request.user))
+
+    return render(request, 'users/post_pretest_explanation.html')
+
+@login_required
+def pre_posttest_explanation(request):
+    profile = request.user.profile
+
+    if profile.progress != 'training1':
+        return redirect(get_next_step(request.user))
+
+    if request.method == 'POST':
+        profile.progress = 'pre_posttest_explanation'
+        profile.save()
+        return redirect(get_next_step(request.user))
+
+    return render(request, 'users/pre_posttest_explanation.html')

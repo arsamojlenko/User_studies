@@ -15,10 +15,16 @@ def get_next_step(user):
     if progress == 'terms_accepted':
         return 'users:questionnaire1'
     elif progress == 'questionnaire1':
-        return 'tests:pretest'
+        return 'users:pretest_explanation'
+    elif progress == 'pretest_explanation':
+            return 'tests:pretest'
     elif progress == 'pretest':
-        return 'tests:start_training_page'          # first normal training
+            return 'users:post_pretest_explanation'
+    elif progress == 'post_pretest_explanation':
+            return 'tests:start_training_page'
     elif progress == 'training1':
+        return 'users:pre_posttest_explanation'
+    elif progress == 'pre_posttest_explanation':
         return 'tests:posttest1'
     elif progress == 'posttest1':
         return 'users:questionnaire2'

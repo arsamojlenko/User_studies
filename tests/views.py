@@ -125,14 +125,16 @@ def stop_training(request, session_id):
 
         profile = request.user.profile
 
-        if session.session_type == 'pretest' and profile.progress == 'questionnaire1':
+        profile = request.user.profile
+
+        if session.session_type == 'pretest':
             profile.progress = 'pretest'
             assign_condition_balanced(request.user)
 
-        elif session.session_type == 'training' and profile.progress == 'pretest':
+        elif session.session_type == 'training' and profile.progress == 'post_pretest_explanation':
             profile.progress = 'training1'
 
-        elif session.session_type == 'posttest1' and profile.progress == 'training1':
+        elif session.session_type == 'posttest1':
             profile.progress = 'posttest1'
 
         elif session.session_type == 'posttest2':
@@ -236,7 +238,7 @@ def submit_answer(request, session_id):
 @login_required
 def pretest(request):
     profile = request.user.profile
-    if profile.progress != 'questionnaire1':
+    if profile.progress != 'pretest_explanation':
         return redirect(get_next_step(request.user))
 
     session, created = TestSession.objects.get_or_create(
@@ -254,7 +256,7 @@ def pretest(request):
 @login_required
 def posttest1(request):
     profile = request.user.profile
-    if profile.progress != 'training1':
+    if profile.progress != 'pre_posttest_explanation':
         return redirect(get_next_step(request.user))
 
     session, created = TestSession.objects.get_or_create(
