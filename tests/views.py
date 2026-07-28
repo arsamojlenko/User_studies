@@ -89,8 +89,27 @@ def begin_training(request):
 def stop_training(request, session_id):
     session = get_object_or_404(TestSession, id=session_id, user=request.user)
 
+    # How many items belong to this session
+    total = session.items.count()
+    answered = len(session.responses or {})
+
+    # Mandatory sessions must be fully answered
+    is_mandatory = session.session_type in ['pretest', 'posttest1', 'posttest2'] or \
+                   (session.session_type == 'training' and
+                    not TestSession.objects.filter(user=request.user, session_type='training',
+                                                   start_time__lt=session.start_time).exists())
+
+    if is_mandatory and answered < total:
+        # If user tries to stop early send them back
+        from django.contrib import messages
+        messages.warning(request,f"Please answer all questions before ending the session. "
+                                 f"You have answered {answered} out of {total}.")
+        return redirect('tests:training_session', session_id=session.id)
+
     if session.end_time is None:
         session.end_time = timezone.now()
+        session.total_time_seconds = int((session.end_time - session.start_time).total_seconds())
+        session.answered_count = answered
         duration = session.end_time - session.start_time
         session.total_time_seconds = int(duration.total_seconds())
         session.save()
@@ -123,24 +142,32 @@ def stop_training(request, session_id):
         profile.last_activity_date = today
         profile.save()
 
-        profile = request.user.profile
-
-        profile = request.user.profile
+        print("=== STOP DEBUG ===")
+        print("Session type:", session.session_type)
+        print("Progress before:", profile.progress)
 
         if session.session_type == 'pretest':
             profile.progress = 'pretest'
             assign_condition_balanced(request.user)
+            print("set to pretest")
 
-        elif session.session_type == 'training' and profile.progress == 'post_pretest_explanation':
+        #elif session.session_type == 'training' and profile.progress == 'post_pretest_explanation':
+        elif session.session_type == 'training':
+            #if profile.progress in ['pretest', 'post_pretest_explanation']:
+            #    profile.progress = 'training1'
             profile.progress = 'training1'
+            print("forcing to training1")
 
         elif session.session_type == 'posttest1':
             profile.progress = 'posttest1'
+            print("set to posttest1")
 
         elif session.session_type == 'posttest2':
             profile.progress = 'posttest2'
 
         profile.save()
+        print("Progress after:", profile.progress)
+        print("Next step will be:", get_next_step(request.user))
 
     return redirect(get_next_step(request.user))
 
@@ -153,6 +180,15 @@ def session_history(request):
 @login_required
 def training_session(request, session_id):
     session = get_object_or_404(TestSession, id=session_id, user=request.user)
+
+    is_first_training = (
+            session.session_type == 'training' and
+            not TestSession.objects.filter(
+                user=request.user,
+                session_type='training',
+                start_time__lt=session.start_time
+            ).exists()
+    )
 
     if session.end_time is not None:
         return redirect('tests:start_training_page')
@@ -181,7 +217,8 @@ def training_session(request, session_id):
         'is_gamified': session.condition == 'gamified',
         'has_previous': current_index > 0,
         'has_next': current_index < len(items) - 1,
-        'responses_json': responses_json,          # ← new
+        'responses_json': responses_json,
+        'is_first_training': is_first_training,
     }
     return render(request, 'tests/training_session.html', context)
 
@@ -210,6 +247,10 @@ def submit_answer(request, session_id):
     }
     session.responses = responses
     session.score = sum(r.get('points', 0) for r in responses.values())
+    session.save()
+
+    # Count how many questions got answered during the free use period
+    session.answered_count = len(session.responses)
     session.save()
 
     # Calculate longest streak

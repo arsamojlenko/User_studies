@@ -106,10 +106,9 @@ def questionnaire1(request):
     profile = request.user.profile
     print("=== Questionnaire 1 ===")
     print("Current progress:", profile.progress)
-    print("Expected: registered")
 
     if profile.progress != 'terms_accepted':
-        print("→ Redirecting to", get_next_step(request.user))
+        print("Redirecting to", get_next_step(request.user))
         return redirect(get_next_step(request.user))
 
     if request.method == 'POST':

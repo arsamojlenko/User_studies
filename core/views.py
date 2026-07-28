@@ -113,11 +113,14 @@ def export_data(request):
 
     # Header
     writer.writerow([
+        # user
         'User ID', 'Username', 'Email', 'Condition', 'Study Progress',
-        'Current Daily Streak', 'Longest Daily Streak', 'Last Activity Date', 'Last Login', 'Account Creation Date',
+        'Current Daily Streak', 'Longest Daily Streak', 'Last Activity Date', 'Last Login', 'Registration Date',
+        # session
         'Session ID', 'Session Type', 'Session Condition', 'Session Score',
-        'Longest Streak', 'Total Time', 'Start Time', 'End Time',
-        'Item ID', 'Points of Item', 'User Answer', 'Correct Answer', 'Is Correct', 'Points Earned'
+        'Longest Streak', 'Total Time', 'Start Time', 'End Time', 'Answered Count',
+        # answers
+        'Item ID', 'Points of Item', 'User Answer', 'Correct Answer', 'Is Correct', 'Points Earned',
     ])
 
     users = User.objects.select_related('profile').all().order_by('id')
@@ -136,7 +139,7 @@ def export_data(request):
             responses = session.responses or {}
 
             if is_important and responses:
-                # Detailes for pretest, training1, posttest1 and posttest2
+                # Details for pretest, training1, posttest1 and posttest2
                 for item_id, resp in responses.items():
                     writer.writerow([
                         user.id, user.username, user.email,
@@ -150,7 +153,7 @@ def export_data(request):
 
                         session.id, session.session_type, session.condition,
                         session.score, session.longest_streak, session.total_time_seconds,
-                        session.start_time, session.end_time,
+                        session.start_time, session.end_time, session.answered_count,
 
                         resp.get('item_id', item_id),
                         resp.get('points', ''),

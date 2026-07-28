@@ -32,6 +32,7 @@ class TestSession(models.Model):
     responses = models.JSONField(default=dict)  # e.g., {"item_123": {"answer": "B", "time": 45, "correct": True}}
     items = models.ManyToManyField(RPMItem)
     longest_streak = models.PositiveIntegerField(default=0)
+    answered_count = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ['-start_time']

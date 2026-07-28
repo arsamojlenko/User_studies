@@ -19,6 +19,16 @@
         </div>
     </div>
 
+    <!-- Complete mandatory sessions before stopping the test -->
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background:#fff3cd; border:1px solid #ffeeba; color:#856404;
+                        padding:14px 20px; border-radius:8px; margin-bottom:25px; text-align:center;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <!-- Score display -->
     {% if is_gamified %}
     <div style="background:#e7f5ff; border:1px solid #74c0fc; border-radius:8px; padding:12px 18px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
@@ -111,7 +121,7 @@
             {% if has_previous %}
                 <a href="?q={{ current_index|add:'-1' }}"
                    style="padding:11px 22px; background:#6c757d; color:white; text-decoration:none; border-radius:6px;">
-                    ← Previous
+                    Previous
                 </a>
             {% else %}
                 <span></span>
@@ -124,7 +134,7 @@
                 </a>
             {% else %}
                 <!-- Finish button -->
-                <form method="post" action="{% url 'tests:stop_training' session.id %}" style="margin:0;">
+                <form method="post" action="{% url 'tests:stop_training' session.id %}">
                     {% csrf_token %}
                     <button type="submit"
                             style="padding:11px 28px; background:#28a745; color:white; border:none; border-radius:6px; font-size:1.05em; cursor:pointer;">
