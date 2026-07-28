@@ -6,6 +6,7 @@ import csv
 from django.http import HttpResponse
 from datetime import date, timedelta
 from users.utils import get_next_step
+from django.contrib.auth.models import User
 
 @login_required
 def home(request):
@@ -106,35 +107,75 @@ def is_staff(user):
 @user_passes_test(is_staff)
 def export_data(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="rpm_study_export.csv"'
+    response['Content-Disposition'] = 'attachment; filename="rpm_study_full_export.csv"'
 
     writer = csv.writer(response)
 
-    # Header row
+    # Header
     writer.writerow([
-        'Username',
-        'Current Condition',
-        'Session Type',
-        'Condition at Session',
-        'Score',
-        'Start Time',
-        'End Time',
-        'Total Time (seconds)',
+        'User ID', 'Username', 'Email', 'Condition', 'Study Progress',
+        'Current Daily Streak', 'Longest Daily Streak', 'Last Activity Date', 'Last Login', 'Account Creation Date',
+        'Session ID', 'Session Type', 'Session Condition', 'Session Score',
+        'Longest Streak', 'Total Time', 'Start Time', 'End Time',
+        'Item ID', 'Points of Item', 'User Answer', 'Correct Answer', 'Is Correct', 'Points Earned'
     ])
 
-    sessions = TestSession.objects.select_related('user', 'user__profile').order_by('user__username', '-start_time')
+    users = User.objects.select_related('profile').all().order_by('id')
 
-    for s in sessions:
-        current_condition = s.user.profile.condition if hasattr(s.user, 'profile') else 'unknown'
-        writer.writerow([
-            s.user.username,
-            current_condition,
-            s.session_type,
-            s.condition,
-            s.score,
-            s.start_time,
-            s.end_time,
-            s.total_time_seconds,
-        ])
+    for user in users:
+        profile = getattr(user, 'profile', None)
+        sessions = TestSession.objects.filter(user=user).order_by('start_time')
+
+        # Find the first training session
+        first_training = sessions.filter(session_type='training').order_by('start_time').first()
+
+        for session in sessions:
+            is_important = session.session_type in ['pretest', 'posttest1', 'posttest2'] or \
+                           (session.session_type == 'training' and first_training and session.id == first_training.id)
+
+            responses = session.responses or {}
+
+            if is_important and responses:
+                # Detailes for pretest, training1, posttest1 and posttest2
+                for item_id, resp in responses.items():
+                    writer.writerow([
+                        user.id, user.username, user.email,
+                        profile.condition if profile else '',
+                        profile.progress if profile else '',
+                        profile.current_daily_streak if profile else '',
+                        profile.longest_daily_streak if profile else '',
+                        profile.last_activity_date if profile else '',
+                        profile.last_login_at if profile else '',
+                        user.date_joined,
+
+                        session.id, session.session_type, session.condition,
+                        session.score, session.longest_streak, session.total_time_seconds,
+                        session.start_time, session.end_time,
+
+                        resp.get('item_id', item_id),
+                        resp.get('points', ''),
+                        resp.get('user_answer', ''),
+                        resp.get('correct_answer', ''),
+                        resp.get('is_correct', ''),
+                        resp.get('points', 0) if resp.get('is_correct') else 0,
+                    ])
+            else:
+                # Summary row only
+                writer.writerow([
+                    user.id, user.username, user.email,
+                    profile.condition if profile else '',
+                    profile.progress if profile else '',
+                    profile.current_daily_streak if profile else '',
+                    profile.longest_daily_streak if profile else '',
+                    profile.last_activity_date if profile else '',
+                    profile.last_login_at if profile else '',
+                    user.date_joined,
+
+                    session.id, session.session_type, session.condition,
+                    session.score, session.longest_streak, session.total_time_seconds,
+                    session.start_time, session.end_time,
+
+                    '', '', '', '', '', ''
+                ])
 
     return response
