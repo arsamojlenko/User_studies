@@ -19,6 +19,24 @@
         </div>
     </div>
 
+    <!-- Score display -->
+    {% if is_gamified %}
+    <div style="background:#e7f5ff; border:1px solid #74c0fc; border-radius:8px; padding:12px 18px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            This puzzle is worth:
+            <strong style="font-size:1.3em; color:#1c7ed6;">
+                {{ current_item.points }} point{{ current_item.points|pluralize }}
+            </strong>
+        </div>
+        <div>
+            Current score:
+            <strong style="font-size:1.3em; color:#2f9e44;" id="session-score">
+                {{ session.score|default:0 }}
+            </strong>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Streak of correctly answered items -->
     {% if is_gamified %}
     <div style="margin-bottom: 25px;">
@@ -208,7 +226,13 @@ choiceButtons.forEach(btn => {
             // 1. Show correct/incorrect feedback
             highlightAnswer(answer, data.is_correct);
 
-            // 2. Update longest streak display
+            // 2. Update Score
+            const scoreEl = document.getElementById('session-score');
+            if (scoreEl && data.score !== undefined) {
+                scoreEl.textContent = data.score;
+            }
+
+            // 3. Update longest streak display
             const streakEl = document.getElementById('longest-streak');
             if (streakEl && data.longest_streak !== undefined) {
                 streakEl.textContent = data.longest_streak;

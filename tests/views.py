@@ -206,9 +206,11 @@ def submit_answer(request, session_id):
         'correct_answer': item.correct_answer,
         'is_correct': is_correct,
         'item_id': item.item_id,
+        'points': item.points if is_correct else 0,
     }
     session.responses = responses
-    session.score = sum(1 for r in responses.values() if r.get('is_correct'))
+    session.score = sum(r.get('points', 0) for r in responses.values())
+    session.save()
 
     # Calculate longest streak
     # Items should be in the same order as shown
@@ -232,7 +234,8 @@ def submit_answer(request, session_id):
         'is_correct': is_correct,
         'correct_answer': item.correct_answer,
         'score': session.score,
-        'longest_streak': longest_streak
+        'longest_streak': longest_streak,
+        'points_earned': item.points if is_correct else 0,
     })
 
 @login_required

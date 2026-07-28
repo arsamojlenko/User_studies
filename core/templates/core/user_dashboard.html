@@ -63,6 +63,14 @@
     {% endif %}
 </div>
 {% endif %}
+{% if user.profile.condition == 'gamified' %}
+<div style="background:#f3faf3; border:1px solid #8ce99a; border-radius:10px; padding:20px; margin-bottom:30px;">
+    <h3 style="margin-top:0;">Highest Score</h3>
+    <p style="font-size:1.8em; font-weight:bold; color:#2f9e44; margin:0;">
+        {{ highest_score }} points
+    </p>
+</div>
+{% endif %}
 {% if sessions %}
     <p style="font-size:1.2em; margin-bottom:25px;">
         Your best streak of correctly answered questions so far:

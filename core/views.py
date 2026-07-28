@@ -45,13 +45,6 @@ def user_dashboard(request):
 
     if profile.progress not in allowed and not request.user.is_staff:
         return redirect(next_step)
-    # if next_step not in ['core:dashboard', 'core:user_dashboard'] and not request.user.is_staff:
-    #         return redirect(next_step)
-    
-    # Force the correct next step if the user still has mandatory tasks
-    #next_step = get_next_step(request.user)
-    #if next_step not in ['core:dashboard', 'core:user_dashboard']:
-    #    return redirect(next_step)
 
     if not request.user.is_staff and request.user.profile.condition != 'gamified':
         return redirect('tests:start_training_page')
@@ -82,12 +75,18 @@ def user_dashboard(request):
             'active': d in trained_dates
         })
 
+    # Highest score from all sessions
+    highest_score = 0
+    if my_sessions.exists():
+        highest_score = max(s.score or 0 for s in my_sessions)
+
     return render(request, 'core/user_dashboard.html', {
         'sessions': my_sessions,
         'best_streak': best_streak,
         'last_7_days': last_7_days,
-        'next_step': next_step,  # ← important
+        'next_step': next_step,
         'progress': profile.progress,
+        'highest_score': highest_score,
     })
 
 @login_required
