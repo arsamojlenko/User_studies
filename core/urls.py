@@ -11,4 +11,5 @@ urlpatterns = [
     path('participants/', views.participant_list, name='participant_list'),
     #path('questionnaires/', views.questionnaire_list, name='questionnaires'),
     path('export/', views.export_data, name='export_data'),
+    path('export-questionnaires/', views.export_questionnaires, name='export_questionnaires'),
 ]

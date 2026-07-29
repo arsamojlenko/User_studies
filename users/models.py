@@ -62,6 +62,27 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username} – {self.get_condition_display()} – {self.progress}"
 
+
+class QuestionnaireResponse(models.Model):
+    QUESTIONNAIRE_CHOICES = [
+        ('q1', 'Questionnaire 1 (Background)'),
+        ('q2', 'Questionnaire 2'),
+        ('q3', 'Questionnaire 3'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questionnaire_responses')
+    questionnaire = models.CharField(max_length=5, choices=QUESTIONNAIRE_CHOICES)
+    answers = models.JSONField(default=dict)         
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'questionnaire')   # one response per questionnaire per user
+        ordering = ['questionnaire']
+
+    def __str__(self):
+        return f"{self.user.username} – {self.get_questionnaire_display()}"
+
+
 # Automatically create a profile when a new user is created
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

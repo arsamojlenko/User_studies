@@ -12,6 +12,7 @@ from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.utils import timezone
 from users.utils import get_next_step
+from .models import QuestionnaireResponse
 
 def register(request):
     if request.method == 'POST':
@@ -112,6 +113,7 @@ def questionnaire1(request):
         return redirect(get_next_step(request.user))
 
     if request.method == 'POST':
+        save_questionnaire_answers(request.user, 'q1', request.POST)
         profile.progress = 'questionnaire1'
         profile.save()
         return redirect(get_next_step(request.user))
@@ -125,7 +127,7 @@ def questionnaire2(request):
         return redirect(get_next_step(request.user))
 
     if request.method == 'POST':
-        # Save answers later, for now just advance
+        save_questionnaire_answers(request.user, 'q2', request.POST)
         profile.progress = 'questionnaire2'
         profile.save()
         return redirect(get_next_step(request.user))
@@ -139,7 +141,7 @@ def questionnaire3(request):
         return redirect(get_next_step(request.user))
 
     if request.method == 'POST':
-        # Save answers later – for now just advance
+        save_questionnaire_answers(request.user, 'q3', request.POST)
         profile.progress = 'questionnaire3'
         profile.save()
         return redirect(get_next_step(request.user))
@@ -239,3 +241,24 @@ def pre_posttest_explanation(request):
         return redirect(get_next_step(request.user))
 
     return render(request, 'users/pre_posttest_explanation.html')
+
+def save_questionnaire_answers(user, questionnaire_code, post_data):
+    """
+    Saves all answers from a POST request into the QuestionnaireResponse model.
+    """
+    # Convert QueryDict to a normal dict and clean it
+    answers = {}
+    for key, value in post_data.items():
+        if key == 'csrfmiddlewaretoken':
+            continue
+        # Handle checkboxes (multiple values)
+        if hasattr(post_data, 'getlist') and len(post_data.getlist(key)) > 1:
+            answers[key] = post_data.getlist(key)
+        else:
+            answers[key] = value
+
+    QuestionnaireResponse.objects.update_or_create(
+        user=user,
+        questionnaire=questionnaire_code,
+        defaults={'answers': answers}
+    )

@@ -3,9 +3,16 @@
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <h1>Admin Dashboard – All Participants</h1>
+</div>
+<div style="display: flex; gap: 12px; margin-bottom: 20px;">
     <a href="{% url 'core:export_data' %}"
        style="padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">
-        Export CSV
+        Export User Data
+    </a>
+
+    <a href="{% url 'core:export_questionnaires' %}"
+       style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+        Export Questionnaires
     </a>
 </div>
 

@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from datetime import date, timedelta
 from users.utils import get_next_step
 from django.contrib.auth.models import User
+from users.models import QuestionnaireResponse
 
 @login_required
 def home(request):
@@ -180,5 +181,64 @@ def export_data(request):
 
                     '', '', '', '', '', ''
                 ])
+
+    return response
+
+@login_required
+@user_passes_test(is_staff)
+def export_questionnaires(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="rpm_questionnaires_export.csv"'
+
+    writer = csv.writer(response)
+
+    # Header
+    writer.writerow([
+        'User ID',
+        'Username',
+        'Condition',
+        'Questionnaire',
+        'Submitted At',
+        'Age',
+        'Gender',
+        'Prior Knowledge',
+        'Freq Educational',
+        'Freq Social',
+        'Freq Video',
+        'Freq Games',
+        'Features',
+        'All Answers (JSON)',
+    ])
+
+    responses = (QuestionnaireResponse.objects
+                 .select_related('user', 'user__profile')
+                 .order_by('user__id', 'questionnaire'))
+
+    for resp in responses:
+        answers = resp.answers or {}
+        profile = getattr(resp.user, 'profile', None)
+
+        features = answers.get('features', [])
+        if isinstance(features, list):
+            features_str = ', '.join(features)
+        else:
+            features_str = str(features)
+
+        writer.writerow([
+            resp.user.id,
+            resp.user.username,
+            getattr(profile, 'condition', ''),
+            resp.get_questionnaire_display(),
+            resp.submitted_at,
+            answers.get('age', ''),
+            answers.get('gender', ''),
+            answers.get('prior_knowledge', ''),
+            answers.get('freq_edu', ''),
+            answers.get('freq_social', ''),
+            answers.get('freq_video', ''),
+            answers.get('freq_games', ''),
+            features_str,
+            str(answers),
+        ])
 
     return response
