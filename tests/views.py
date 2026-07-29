@@ -10,6 +10,7 @@ from datetime import date, timedelta
 from users.utils import get_next_step
 from users.utils import assign_condition_balanced
 import random
+from django.http import HttpResponse
 
 @login_required
 def start_session(request, session_type):

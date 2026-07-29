@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="max-width: 800px; margin: 50px auto; font-family: 'Segoe UI', system-ui, sans-serif;">
+
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 1.8rem; font-weight: 600; color: #1a1a2e; margin-bottom: 8px;">
+            Questionnaire
+        </h1>
+        <p style="color: #555; font-size: 1.05rem;">
+            Please read each statement carefully and indicate how much you agree with it.
+        </p>
+        <p style="color: #555; font-size: 1.05rem;">
+            There are no right or wrong answers.
+        </p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- ========== SECTION A ========== -->
+        <div style="background: white; border-radius: 12px; box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+                    padding: 32px 36px; margin-bottom: 36px; border: 1px solid #eee;">
+
+            <h2 style="font-size: 1.25rem; color: #1a1a2e; margin-bottom: 6px; font-weight: 600;">
+                Section A
+            </h2>
+            <p style="color: #666; font-size: 0.95rem; margin-bottom: 22px;">
+                Please indicate the extent to which you agree with each statement.
+            </p>
+
+            <!-- Scale legend -->
+            <div style="background: #f0f4ff; border-radius: 8px; padding: 14px 18px; margin-bottom: 28px;
+                        font-size: 0.9rem; color: #333; display: flex; flex-wrap: wrap; gap: 12px 24px;">
+                <span><strong>1</strong> = Strongly disagree</span>
+                <span><strong>2</strong> = Disagree</span>
+                <span><strong>3</strong> = Neither</span>
+                <span><strong>4</strong> = Agree</span>
+                <span><strong>5</strong> = Strongly agree</span>
+            </div>
+
+            <!-- UES-SF - Focused Attention (FA) - FA-S.1 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">1.</span>
+                    I lost myself in this experience.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a1" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Focused Attention (FA) - FA-S.2 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">2.</span>
+                    The time I spent using this Application just slipped away.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a2" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Focused Attention (FA) - FA-S.3 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">3.</span>
+                     I was absorbed in this experience.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a3" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Perceived Usability (PU) - PU-S.1 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">4.</span>
+                     I felt frustrated while using this Application.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a4" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Perceived Usability (PU) - PU-S.2 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">5.</span>
+                      I found this Application confusing to use.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a5" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Perceived Usability (PU) - PU-S.3 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">6.</span>
+                      Using this Application was taxing.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a6" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Aesthetic Elements (AE) - AE-S.1 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">7.</span>
+                      This Application was attractive.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a7" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Aesthetic Elements (AE) - AE-S.2 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">8.</span>
+                      This Application was aesthetically appealing.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a8" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Aesthetic Elements (AE) - AE-S.3 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">9.</span>
+                      Application appealed to be visual senses.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a9" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Reward Factor (RW) - RW-S.1 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">10.</span>
+                      Using this Application was worthwhile.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a10" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Reward Factor (RW) - RW-S.2 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">11.</span>
+                      My experience was rewarding.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a11" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- UES-SF - Reward Factor (RW) - RW-S.3 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">12.</span>
+                      I felt interested in this experience.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_a12" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== SECTION B ========== -->
+        <div style="background: white; border-radius: 12px; box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+                    padding: 32px 36px; margin-bottom: 36px; border: 1px solid #eee;">
+
+            <h2 style="font-size: 1.25rem; color: #1a1a2e; margin-bottom: 6px; font-weight: 600;">
+                Section B
+            </h2>
+            <p style="color: #666; font-size: 0.95rem; margin-bottom: 22px;">
+                Please indicate how true each statement is for you.
+            </p>
+
+            <!-- Scale legend -->
+            <div style="background: #f0f9f4; border-radius: 8px; padding: 14px 18px; margin-bottom: 28px;
+                        font-size: 0.9rem; color: #333; display: flex; flex-wrap: wrap; gap: 12px 24px;">
+                <span><strong>1</strong> = Not at all true</span>
+                <span><strong>4</strong> = Somewhat true</span>
+                <span><strong>7</strong> = Very true</span>
+            </div>
+
+            <!-- IMI - Interest/Enjoyment - 1 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #2ec4b6; font-weight: 600; margin-right: 6px;">1.</span>
+                      I enjoyed doing this activity very much.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "1234567" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_b1" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- IMI - Interest/Enjoyment - 2 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #2ec4b6; font-weight: 600; margin-right: 6px;">2.</span>
+                      This activity was fun to do.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "1234567" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_b2" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- IMI - Interest/Enjoyment - 3 R -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #2ec4b6; font-weight: 600; margin-right: 6px;">3.</span>
+                      I thought this was a boring activity.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "1234567" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_b3" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- IMI - Interest/Enjoyment - 4 R -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #2ec4b6; font-weight: 600; margin-right: 6px;">4.</span>
+                      This activity did not hold my attention at all.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "1234567" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_b4" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- IMI - Interest/Enjoyment - 5 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #2ec4b6; font-weight: 600; margin-right: 6px;">5.</span>
+                      I would describe this activity as very interesting.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "1234567" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_b5" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- IMI - Interest/Enjoyment - 6 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #2ec4b6; font-weight: 600; margin-right: 6px;">6.</span>
+                      I thought this activity was quite enjoyable.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "1234567" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_b6" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- IMI - Interest/Enjoyment - 7 -->
+            <div style="margin-bottom: 34px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 16px; color: #222;">
+                    <span style="color: #2ec4b6; font-weight: 600; margin-right: 6px;">7.</span>
+                      While I was doing this activity, I was thinking about how much I enjoyed it.
+                </p>
+                <div style="display: flex; justify-content: space-between; max-width: 460px;">
+                    {% for val in "1234567" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="q_b7" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Submit button -->
+        <div style="text-align: center; margin-top: 20px; margin-bottom: 60px;">
+            <button type="submit"
+                    style="padding: 14px 48px; background: linear-gradient(135deg, #4361ee, #3a0ca3);
+                           color: white; border: none; border-radius: 8px; font-size: 1.05rem;
+                           font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(67,97,238,0.35);
+                           transition: transform 0.15s;">
+                Submit & Continue
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
