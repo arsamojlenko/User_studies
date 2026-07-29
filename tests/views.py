@@ -9,6 +9,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from datetime import date, timedelta
 from users.utils import get_next_step
 from users.utils import assign_condition_balanced
+import random
 
 @login_required
 def start_session(request, session_type):
@@ -76,10 +77,22 @@ def begin_training(request):
     session = TestSession.objects.create(
         user=request.user,
         session_type='training',
-        condition=condition,
+        condition=request.user.profile.condition,
         start_time=timezone.now()
     )
-    items = list(RPMItem.objects.all()[:3])
+    # For testing
+    #items = list(RPMItem.objects.all()[:3])
+
+    is_first_training = not TestSession.objects.filter(
+        user=request.user,
+        session_type='training'
+    ).exists()
+
+    if is_first_training:
+        items = get_fixed_session_items('training1')
+    else:
+        items = get_random_training_items()
+
     session.items.set(items)
 
     return redirect('tests:training_session', session_id=session.id)
@@ -152,11 +165,21 @@ def stop_training(request, session_id):
             print("set to pretest")
 
         #elif session.session_type == 'training' and profile.progress == 'post_pretest_explanation':
-        elif session.session_type == 'training':
+        #elif session.session_type == 'training':
             #if profile.progress in ['pretest', 'post_pretest_explanation']:
             #    profile.progress = 'training1'
-            profile.progress = 'training1'
-            print("forcing to training1")
+            #profile.progress = 'training1'
+            #print("forcing to training1")
+
+        elif session.session_type == 'training':
+            is_first_training = not TestSession.objects.filter(
+                user=request.user,
+                session_type='training',
+                start_time__lt=session.start_time
+            ).exists()
+
+            if is_first_training:
+                profile.progress = 'training1'
 
         elif session.session_type == 'posttest1':
             profile.progress = 'posttest1'
@@ -290,9 +313,12 @@ def pretest(request):
         session_type='pretest',
         defaults={'condition': profile.condition}
     )
+
     if created or not session.items.exists():
-        # Fixed set
-        items = RPMItem.objects.filter(set_number=1).order_by('id')[:2]
+        # For testing
+       #items = RPMItem.objects.filter(set_number=1).order_by('id')[:2]
+        # Proper version
+        items = get_fixed_session_items('pretest')
         session.items.set(items)
 
     return redirect('tests:training_session', session_id=session.id)
@@ -308,8 +334,12 @@ def posttest1(request):
         session_type='posttest1',
         defaults={'condition': profile.condition}
     )
+
     if created or not session.items.exists():
-        items = RPMItem.objects.filter(set_number=2).order_by('id')[:2]
+        # For testing
+        #items = RPMItem.objects.filter(set_number=2).order_by('id')[:2]
+        # Proper version
+        items = get_fixed_session_items('posttest1')
         session.items.set(items)
 
     return redirect('tests:training_session', session_id=session.id)
@@ -326,7 +356,45 @@ def posttest2(request):
         defaults={'condition': profile.condition}
     )
     if created or not session.items.exists():
-        items = RPMItem.objects.filter(set_number=3).order_by('id')[:2]
+        # For testing
+        #items = RPMItem.objects.filter(set_number=3).order_by('id')[:2]
+        # Proper version
+        items = get_fixed_session_items('posttest2')
         session.items.set(items)
 
     return redirect('tests:training_session', session_id=session.id)
+
+
+def get_random_training_items():
+    """3 random matrices from each level (never reserved ones)."""
+    selected = []
+    for level in [1, 2, 3]:
+        pool = list(RPMItem.objects.filter(set_number=level, is_reserved=False))
+        if len(pool) >= 3:
+            selected.extend(random.sample(pool, 3))
+        else:
+            selected.extend(pool)
+    random.shuffle(selected)
+    return selected
+
+def get_fixed_session_items(session_type):
+    """
+        Returns exactly 9 fixed matrices (3 from each level) for mandatory tests.
+        Different non overlapping slices for pretest, training1, posttest1, posttest2.
+    """
+    offsets = {
+        'pretest': 0,
+        'training1': 3,
+        'posttest1': 6,
+        'posttest2': 9,
+    }
+    offset = offsets.get(session_type, 0)
+
+    selected = []
+    for level in [1, 2, 3]:
+        items = list(
+            RPMItem.objects.filter(set_number=level, is_reserved=True)
+            .order_by('id')[offset:offset+3]
+        )
+        selected.extend(items)
+    return selected

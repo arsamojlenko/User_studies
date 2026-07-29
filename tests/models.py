@@ -9,6 +9,7 @@ class RPMItem(models.Model):
     correct_answer = models.CharField(max_length=10)
     explanation = models.TextField(blank=True)
     set_number = models.IntegerField(help_text="For fixed levels")
+    is_reserved = models.BooleanField(default=False)
     @property
     def points(self):
         """Points according to problem type"""
