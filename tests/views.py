@@ -215,12 +215,12 @@ def training_session(request, session_id):
     session = get_object_or_404(TestSession, id=session_id, user=request.user)
 
     is_first_training = (
-            session.session_type == 'training' and
-            not TestSession.objects.filter(
-                user=request.user,
-                session_type='training',
-                start_time__lt=session.start_time
-            ).exists()
+        session.session_type == 'training' and
+        not TestSession.objects.filter(
+            user=request.user,
+            session_type='training',
+            start_time__lt=session.start_time
+        ).exists()
     )
 
     if session.end_time is not None:
@@ -241,13 +241,22 @@ def training_session(request, session_id):
 
     responses_json = json.dumps(session.responses or {}, cls=DjangoJSONEncoder)
 
+    is_gamified = (
+        session.session_type == 'training' and
+        session.condition == 'gamified'
+    )
+
+    # Pretest and posttests are always non-gamified
+    if session.session_type in ['pretest', 'posttest1', 'posttest2']:
+        is_gamified = False
+
     context = {
         'session': session,
         'items': items,
         'current_item': current_item,
         'current_index': current_index,
         'total_items': len(items),
-        'is_gamified': session.condition == 'gamified',
+        'is_gamified': is_gamified,
         'has_previous': current_index > 0,
         'has_next': current_index < len(items) - 1,
         'responses_json': responses_json,
