@@ -1,33 +1,201 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div style="max-width: 750px; margin: 40px auto; line-height: 1.6;">
-    <h1>Terms and Conditions</h1>
+<div style="max-width: 840px; margin: 50px auto; font-family: 'Segoe UI', system-ui, sans-serif; color: #1a1a2e;">
 
-    <div style="background:#f8f9fa; padding:25px; border-radius:8px; margin:25px 0; max-height:400px; overflow-y:auto;">
-        <p>By participating in this study you agree that:</p>
-        <ul>
-            <li>Your responses and performance data will be stored anonymously for research purposes.</li>
-            <li>You can withdraw at any time by deleting your account.</li>
-            <li>The data will only be used for scientific analysis and will not be shared with third parties.</li>
-        </ul>
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.3px;">
+            Consent Form
+        </h1>
+        <p style="color: #666; font-size: 1.05rem; max-width: 560px; margin: 0 auto;">
+            Please read the following information carefully before deciding whether to participate in this study.
+        </p>
     </div>
 
-    <form method="post">
-        {% csrf_token %}
+    <!-- Main content card -->
+    <div style="background: white; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.07);
+                padding: 40px 44px; margin-bottom: 28px; border: 1px solid #f0f0f0;">
 
-        <div style="display:flex; gap:20px; flex-wrap:wrap; margin-top:30px;">
-            <button type="submit" name="action" value="agree"
-                    style="padding:14px 28px; background:#28a745; color:white; border:none; border-radius:6px; font-size:1.05em;">
-                I have read and understood the terms and conditions – Start the study
-            </button>
+        <section style="margin-bottom: 32px;">
+            <h2 style="font-size: 1.2rem; font-weight: 600; color: #4361ee; margin-bottom: 12px;">
+                Purpose of the study
+            </h2>
+            <p style="line-height: 1.7; margin-bottom: 10px;">
+                The goal of this study is to investigate digital learning environments and user interactions.
+                The study is conducted by <strong>Arina Samojlenko, Jonas Borgmann and Lukas Rene Schütte</strong>.
+            </p>
+            <p style="line-height: 1.7; margin: 0;">
+                For any questions or complaints please contact:
+                <strong>arina.samojlenko@uni-bielefeld.de, jonas.borgmann@uni-bielefeld.de, lukas.schuette@uni-bielefeld.de</strong>
+            </p>
+        </section>
 
-            <button type="submit" name="action" value="disagree"
-                    style="padding:14px 28px; background:#dc3545; color:white; border:none; border-radius:6px; font-size:1.05em;">
-                I disagree with the terms and conditions – End the study
-            </button>
-        </div>
-    </form>
+        <section style="margin-bottom: 32px;">
+            <h2 style="font-size: 1.2rem; font-weight: 600; color: #4361ee; margin-bottom: 12px;">
+                What your participation involves
+            </h2>
+            <ul style="padding-left: 22px; line-height: 1.8; margin: 0;">
+                <li>Creating an account (username only — no real name or email required)</li>
+                <li>Answering a short baseline questionnaire (demographics, prior experience, digital habits)</li>
+                <li>Learning with our tutoring system</li>
+                <li>Answering short questionnaires about your experience using our system</li>
+            </ul>
+        </section>
+
+        <section style="margin-bottom: 32px;">
+            <h2 style="font-size: 1.2rem; font-weight: 600; color: #4361ee; margin-bottom: 12px;">
+                Voluntary participation and withdrawal
+            </h2>
+            <p style="line-height: 1.7; margin: 0;">
+                Participation is entirely voluntary. You may stop at any point without giving a reason and without any
+                penalty or disadvantage. You may withdraw and request deletion of your data at any time during the study
+                by contacting one of the study conductors or by deleting your account and data yourself.
+            </p>
+        </section>
+
+        <section style="margin-bottom: 32px;">
+            <h2 style="font-size: 1.2rem; font-weight: 600; color: #4361ee; margin-bottom: 12px;">
+                What data is collected?
+            </h2>
+            <ul style="padding-left: 22px; line-height: 1.8; margin: 0;">
+                <li>Username (self-chosen, not linked to your real identity)</li>
+                <li>Questionnaire responses (demographics, prior experience, experience using our system)</li>
+                <li>System usage data</li>
+            </ul>
+        </section>
+
+        <section style="margin-bottom: 32px;">
+            <h2 style="font-size: 1.2rem; font-weight: 600; color: #4361ee; margin-bottom: 12px;">
+                Data usage
+            </h2>
+            <ul style="padding-left: 22px; line-height: 1.8; margin: 0;">
+                <li>Your data is pseudonymized (linked only to your username, not your real identity) for the duration of the study.</li>
+                <li>Your data will be anonymized. Individual responses will never be published or shared in a way that could identify you.</li>
+                <li>Data will be used only for the purposes of this research.</li>
+            </ul>
+        </section>
+
+        <section style="margin-bottom: 32px;">
+            <h2 style="font-size: 1.2rem; font-weight: 600; color: #4361ee; margin-bottom: 12px;">
+                Your right to delete your data
+            </h2>
+            <p style="line-height: 1.7; margin: 0;">
+                You can delete your account and all associated data at any time via the “Delete Account” button or by
+                contacting one of the researchers. Once deleted, this data cannot be recovered and will not be included
+                in the analysis.
+            </p>
+        </section>
+
+        <section>
+            <h2 style="font-size: 1.2rem; font-weight: 600; color: #4361ee; margin-bottom: 12px;">
+                Questions or concerns
+            </h2>
+            <p style="line-height: 1.7; margin-bottom: 16px;">
+                If you have any questions or concerns about this study, please do not hesitate to contact us at
+                <strong>arina.samojlenko@uni-bielefeld.de, jonas.borgmann@uni-bielefeld.de, lukas.schuette@uni-bielefeld.de</strong>.
+            </p>
+            <p style="line-height: 1.7; margin: 0;">
+                You will receive a debriefing at the end of the study.<br>
+                <strong>Thank you for your participation!</strong>
+            </p>
+        </section>
+    </div>
+
+    <!-- Consent card -->
+    <div style="background: white; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.07);
+                padding: 36px 44px; margin-bottom: 50px; border: 1px solid #f0f0f0;">
+
+        <h2 style="font-size: 1.25rem; font-weight: 600; margin-top: 0; margin-bottom: 8px;">
+            Consent
+        </h2>
+        <p style="color: #555; margin-bottom: 24px;">
+            Please confirm the following before proceeding:
+        </p>
+
+        <form method="post" id="consent-form">
+            {% csrf_token %}
+
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+                <label style="display: flex; align-items: flex-start; gap: 14px; cursor: pointer; padding: 12px 14px;
+                               border-radius: 10px; transition: background 0.15s;"
+                       onmouseover="this.style.background='#f8f9fc'" onmouseout="this.style.background='transparent'">
+                    <input type="checkbox" name="consent1" class="consent-check"
+                           style="margin-top: 3px; width: 18px; height: 18px; accent-color: #4361ee; flex-shrink: 0;">
+                    <span>I have read and understood the information above.</span>
+                </label>
+
+                <label style="display: flex; align-items: flex-start; gap: 14px; cursor: pointer; padding: 12px 14px;
+                               border-radius: 10px; transition: background 0.15s;"
+                       onmouseover="this.style.background='#f8f9fc'" onmouseout="this.style.background='transparent'">
+                    <input type="checkbox" name="consent2" class="consent-check"
+                           style="margin-top: 3px; width: 18px; height: 18px; accent-color: #4361ee; flex-shrink: 0;">
+                    <span>I understand that my participation is voluntary and that I can withdraw at any time without penalty and without giving a reason.</span>
+                </label>
+
+                <label style="display: flex; align-items: flex-start; gap: 14px; cursor: pointer; padding: 12px 14px;
+                               border-radius: 10px; transition: background 0.15s;"
+                       onmouseover="this.style.background='#f8f9fc'" onmouseout="this.style.background='transparent'">
+                    <input type="checkbox" name="consent3" class="consent-check"
+                           style="margin-top: 3px; width: 18px; height: 18px; accent-color: #4361ee; flex-shrink: 0;">
+                    <span>I understand what data will be collected and how it will be used.</span>
+                </label>
+
+                <label style="display: flex; align-items: flex-start; gap: 14px; cursor: pointer; padding: 12px 14px;
+                               border-radius: 10px; transition: background 0.15s;"
+                       onmouseover="this.style.background='#f8f9fc'" onmouseout="this.style.background='transparent'">
+                    <input type="checkbox" name="consent4" class="consent-check"
+                           style="margin-top: 3px; width: 18px; height: 18px; accent-color: #4361ee; flex-shrink: 0;">
+                    <span>I understand I can delete my account and data at any time via the method described above.</span>
+                </label>
+
+                <label style="display: flex; align-items: flex-start; gap: 14px; cursor: pointer; padding: 12px 14px;
+                               border-radius: 10px; transition: background 0.15s;"
+                       onmouseover="this.style.background='#f8f9fc'" onmouseout="this.style.background='transparent'">
+                    <input type="checkbox" name="consent5" class="consent-check"
+                           style="margin-top: 3px; width: 18px; height: 18px; accent-color: #4361ee; flex-shrink: 0;">
+                    <span>I agree to take part in this study under the conditions described.</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <button type="submit" name="action" value="agree" id="agree-btn" disabled
+                        style="padding: 15px 32px; background: #28a745; color: white; border: none;
+                               border-radius: 10px; font-size: 1.05rem; font-weight: 600; cursor: not-allowed;
+                               opacity: 0.5; transition: all 0.2s; box-shadow: 0 4px 12px rgba(40,167,69,0.25);">
+                    I accept – Start the study
+                </button>
+
+                <button type="submit" name="action" value="disagree"
+                        style="padding: 15px 32px; background: #fff; color: #dc3545; border: 2px solid #dc3545;
+                               border-radius: 10px; font-size: 1.05rem; font-weight: 600; cursor: pointer;
+                               transition: all 0.2s;">
+                    I decline – End the study
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+    const checkboxes = document.querySelectorAll('.consent-check');
+    const agreeBtn = document.getElementById('agree-btn');
+
+    function updateAgreeButton() {
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        agreeBtn.disabled = !allChecked;
+
+        if (allChecked) {
+            agreeBtn.style.opacity = '1';
+            agreeBtn.style.cursor = 'pointer';
+            agreeBtn.style.background = '#28a745';
+        } else {
+            agreeBtn.style.opacity = '0.5';
+            agreeBtn.style.cursor = 'not-allowed';
+        }
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateAgreeButton));
+</script>
 
 {% endblock %}
