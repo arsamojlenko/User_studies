@@ -1,16 +1,55 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div style="text-align: center; margin-top: 80px;">
-    <h1>Training</h1>
-    <p>Click the button below when you are ready to start.</p>
+<div style="max-width: 560px; margin: 80px auto; text-align: center; font-family: 'Segoe UI', system-ui, sans-serif;">
 
-    <form method="post" action="{% url 'tests:begin_training' %}">
-        {% csrf_token %}
-        <button type="submit" style="padding: 15px 40px; font-size: 1.2em; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;">
-            Start Training
-        </button>
-    </form>
+    <h1 style="font-size: 1.9rem; font-weight: 700; margin-bottom: 10px; color: #1a1a2e;">Training</h1>
+
+    {% if show_final_message %}
+        <!-- Study period over : only show the final test message + button -->
+        <div style="background: #fff8e6; border: 2px solid #ffc107; border-radius: 14px;
+                    padding: 28px 32px; margin-top: 30px; text-align: center;
+                    box-shadow: 0 4px 18px rgba(255, 193, 7, 0.15);">
+            <h3 style="margin: 0 0 12px 0; color: #856404; font-size: 1.25rem;">
+                The study period has ended
+            </h3>
+            <p style="margin: 0 0 22px 0; color: #856404; line-height: 1.5;">
+                Please complete the final test to finish the study.
+            </p>
+            <a href="{% url 'tests:posttest2' %}"
+               style="display: inline-block; padding: 14px 32px; background: #4361ee; color: white;
+                      text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 1.05rem;
+                      box-shadow: 0 4px 14px rgba(67, 97, 238, 0.3);">
+                Start Final Test
+            </a>
+        </div>
+
+    {% else %}
+        <!-- Normal state : show Start Training button -->
+        <p style="color: #555; margin-bottom: 30px;">
+            Click the button below when you are ready to start.
+        </p>
+
+        <form method="post" action="{% url 'tests:begin_training' %}">
+            {% csrf_token %}
+            <button type="submit"
+                    style="padding: 15px 40px; font-size: 1.1rem; background: linear-gradient(135deg, #4361ee, #3a0ca3);
+                           color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;
+                           box-shadow: 0 4px 14px rgba(67, 97, 238, 0.35);">
+                Start Training
+            </button>
+        </form>
+    {% endif %}
+
 </div>
+
+{% if seconds_until_end %}
+<script>
+    // Automatically reload once when the free-use time is over
+    setTimeout(function() {
+        window.location.reload();
+    }, {{ seconds_until_end }} * 1000);
+</script>
+{% endif %}
 
 {% endblock %}

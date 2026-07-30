@@ -34,7 +34,7 @@ def get_next_step(user):
         return 'core:dashboard'                     # free use starts
     elif progress == 'free_use':
         # Check if 7 days have passed
-        if profile.free_use_started and timezone.now() >= profile.free_use_started + timedelta(days=7):
+        if profile.free_use_started and timezone.now() >= profile.free_use_started + timedelta(minutes=1): #timedelta(days=7):
             return 'tests:posttest2'
         return 'core:dashboard'
     elif progress == 'posttest2':

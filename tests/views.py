@@ -61,7 +61,16 @@ def submit_session(request, session_id):
 @login_required
 def start_training_page(request):
     """Page that only shows the start training button"""
-    return render(request, 'tests/start_training.html')
+    # Check if free-use period is over
+    show_final_message = False
+    if request.user.profile.progress == 'free_use' and request.user.profile.free_use_started:
+        if timezone.now() >= request.user.profile.free_use_started + timedelta(minutes=1):
+            show_final_message = True
+
+    # return render(request, 'tests/start_training.html')
+    return render(request, 'tests/start_training.html', {
+        'show_final_message': show_final_message,
+    })
 
 @login_required
 def begin_training(request):

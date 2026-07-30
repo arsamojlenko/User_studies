@@ -8,6 +8,7 @@ from datetime import date, timedelta
 from users.utils import get_next_step
 from django.contrib.auth.models import User
 from users.models import QuestionnaireResponse
+from django.utils import timezone
 
 @login_required
 def home(request):
@@ -51,6 +52,19 @@ def user_dashboard(request):
     if not request.user.is_staff and request.user.profile.condition != 'gamified':
         return redirect('tests:start_training_page')
 
+    # Check if end of study has been reached
+    show_final_message = False
+    seconds_until_end = None
+
+    if profile.progress == 'free_use' and profile.free_use_started:
+        end_time = profile.free_use_started + timedelta(minutes=1)
+        now = timezone.now()
+
+        if now >= end_time:
+            show_final_message = True
+        else:
+            seconds_until_end = int((end_time - now).total_seconds())
+
     my_sessions = TestSession.objects.filter(user=request.user).order_by('-start_time')
 
     # Best matrix streak
@@ -89,6 +103,8 @@ def user_dashboard(request):
         'next_step': next_step,
         'progress': profile.progress,
         'highest_score': highest_score,
+        'show_final_message': show_final_message,
+        'seconds_until_end': seconds_until_end,
     })
 
 @login_required
