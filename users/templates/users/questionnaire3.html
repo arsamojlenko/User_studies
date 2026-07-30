@@ -23,9 +23,9 @@
         <div style="background: white; border-radius: 12px; box-shadow: 0 4px 18px rgba(0,0,0,0.06);
                     padding: 32px 36px; margin-bottom: 36px; border: 1px solid #eee;">
 
-            <h2 style="font-size: 1.25rem; color: #1a1a2e; margin-bottom: 6px; font-weight: 600;">
+            <!-- <h2 style="font-size: 1.25rem; color: #1a1a2e; margin-bottom: 6px; font-weight: 600;">
                 Section B
-            </h2>
+            </h2> -->
             <p style="color: #666; font-size: 0.95rem; margin-bottom: 22px;">
                 Please indicate how true each statement is for you.
             </p>
@@ -151,7 +151,123 @@
                 </div>
             </div>
         </div>
+                <!-- ========== ADDITIONAL QUESTIONS ========== -->
+        <div style="background: white; border-radius: 12px; box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+                    padding: 32px 36px; margin-bottom: 36px; border: 1px solid #eee;">
 
+            <!-- <h2 style="font-size: 1.25rem; color: #1a1a2e; margin-bottom: 6px; font-weight: 600;">
+                Additional Questions
+            </h2> -->
+            <p style="color: #666; font-size: 0.95rem; margin-bottom: 28px;">
+                Please answer the following questions about your use of the learning system.
+            </p>
+
+            <!-- Question: Genuine interest (1–5) -->
+            <div style="margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 10px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">1.</span>
+                    My use of the learning system reflected my genuine interest in it, rather than external constraints on my time.
+                </p>
+
+                <div style="background: #f0f4ff; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px;
+                            font-size: 0.9rem; color: #333; display: flex; flex-wrap: wrap; gap: 12px 20px;">
+                    <span><strong>1</strong> = Strongly disagree</span>
+                    <span><strong>2</strong> = Disagree</span>
+                    <span><strong>3</strong> = Neither</span>
+                    <span><strong>4</strong> = Agree</span>
+                    <span><strong>5</strong> = Strongly agree</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; max-width: 420px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="genuine_interest" value="{{ val }}" required
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Question: Reasons for less use (multi-select) -->
+            <div style="margin-bottom: 28px;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 8px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">2.</span>
+                    If you used the learning system less than you had planned to, what were the reasons?
+                </p>
+                <p style="color: #666; font-size: 0.95rem; margin-bottom: 18px;">
+                    (Select all that apply. If you used the system as you intended to, don’t select anything.)
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px;">
+                        <input type="checkbox" name="less_use_reasons" value="busy_schedule"
+                               class="reason-check" style="width: 18px; height: 18px; accent-color: #4361ee;">
+                        I had a busy schedule / not enough time
+                    </label>
+
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px;">
+                        <input type="checkbox" name="less_use_reasons" value="forgot"
+                               class="reason-check" style="width: 18px; height: 18px; accent-color: #4361ee;">
+                        I forgot to use it
+                    </label>
+
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px;">
+                        <input type="checkbox" name="less_use_reasons" value="technical"
+                               style="width: 18px; height: 18px; accent-color: #4361ee;">
+                        I experienced technical issues
+                    </label>
+
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px;">
+                        <input type="checkbox" name="less_use_reasons" value="not_engaging"
+                               style="width: 18px; height: 18px; accent-color: #4361ee;">
+                        I didn’t find it engaging enough to return to
+                    </label>
+
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px;">
+                        <input type="checkbox" name="less_use_reasons" value="no_need"
+                               style="width: 18px; height: 18px; accent-color: #4361ee;">
+                        I didn’t feel like I needed more practice
+                    </label>
+
+                    <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 8px;">
+                        <input type="checkbox" name="less_use_reasons" value="other" id="other-reason-check"
+                               style="width: 18px; height: 18px; accent-color: #4361ee; margin-top: 4px;">
+                        <span style="flex: 1;">
+                            Other:
+                            <input type="text" name="less_use_other" id="other-reason-text"
+                                   placeholder="Please specify"
+                                   style="width: 100%; margin-top: 8px; padding: 10px 12px; border: 1px solid #ced4da;
+                                          border-radius: 8px; font-size: 0.95rem; display: none;">
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Conditional severity rating -->
+            <div id="severity-section" style="display: none; margin-top: 28px; padding-top: 24px; border-top: 1px solid #f0f0f0;">
+                <p style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 10px; color: #222;">
+                    <span style="color: #4361ee; font-weight: 600; margin-right: 6px;">3.</span>
+                    How much did this affect how often you were able to use the system?
+                </p>
+
+                <div style="background: #f0f4ff; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px;
+                            font-size: 0.9rem; color: #333; display: flex; flex-wrap: wrap; gap: 12px 20px;">
+                    <span><strong>1</strong> = Not at all</span>
+                    <span><strong>5</strong> = A great deal</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; max-width: 420px;">
+                    {% for val in "12345" %}
+                    <label style="text-align: center; cursor: pointer; min-width: 52px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #444; margin-bottom: 7px;">{{ val }}</div>
+                        <input type="radio" name="less_use_severity" value="{{ val }}"
+                               style="width: 18px; height: 18px; accent-color: #4361ee; cursor: pointer;">
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
         <!-- Submit button -->
         <div style="text-align: center; margin-top: 20px; margin-bottom: 60px;">
@@ -165,5 +281,33 @@
         </div>
     </form>
 </div>
+
+<script>
+    // Show/hide "Other" text field
+    const otherCheck = document.getElementById('other-reason-check');
+    const otherText = document.getElementById('other-reason-text');
+
+    otherCheck.addEventListener('change', function() {
+        otherText.style.display = this.checked ? 'block' : 'none';
+        if (!this.checked) otherText.value = '';
+    });
+
+    // Show severity question only if "busy schedule" or "forgot" is selected
+    const reasonChecks = document.querySelectorAll('.reason-check');
+    const severitySection = document.getElementById('severity-section');
+
+    function updateSeverityVisibility() {
+        const show = Array.from(reasonChecks).some(cb => cb.checked);
+        severitySection.style.display = show ? 'block' : 'none';
+
+        // Clear severity if hidden
+        if (!show) {
+            document.querySelectorAll('input[name="less_use_severity"]').forEach(r => r.checked = false);
+        }
+    }
+
+    reasonChecks.forEach(cb => cb.addEventListener('change', updateSeverityVisibility));
+</script>
+
 
 {% endblock %}

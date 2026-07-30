@@ -223,6 +223,10 @@ def export_questionnaires(request):
         'Freq Video',
         'Freq Games',
         'Features',
+        'Genuine Interest (1-5)',
+        'Less Use Reasons',
+        'Less Use Other (text)',
+        'Less Use Severity (1-5)',
         'All Answers (JSON)',
     ])
 
@@ -234,11 +238,19 @@ def export_questionnaires(request):
         answers = resp.answers or {}
         profile = getattr(resp.user, 'profile', None)
 
+        # Checkboxes
         features = answers.get('features', [])
         if isinstance(features, list):
             features_str = ', '.join(features)
         else:
             features_str = str(features)
+
+        # Less use reasons (checkboxes)
+        less_use_reasons = answers.get('less_use_reasons', [])
+        if isinstance(less_use_reasons, list):
+            less_use_reasons_str = ', '.join(less_use_reasons)
+        else:
+            less_use_reasons_str = str(less_use_reasons)
 
         writer.writerow([
             resp.user.id,
@@ -254,6 +266,10 @@ def export_questionnaires(request):
             answers.get('freq_video', ''),
             answers.get('freq_games', ''),
             features_str,
+            answers.get('genuine_interest', ''),
+            less_use_reasons_str,
+            answers.get('less_use_other', ''),
+            answers.get('less_use_severity', ''),
             str(answers),
         ])
 
