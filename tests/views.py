@@ -382,26 +382,26 @@ def posttest1(request):
 @login_required
 def posttest2(request):
     profile = request.user.profile
+
     if profile.progress not in ['free_use', 'posttest2']:
         return redirect(get_next_step(request.user))
 
-    target_date = profile.free_use_started.date() + timedelta(days=3)
-    end_time = timezone.make_aware(
-        datetime.combine(target_date, time.min)
-    )
+    if profile.progress == 'free_use':
+        target_date = profile.free_use_started.date() + timedelta(days=3)
+        end_time = timezone.make_aware(
+            datetime.combine(target_date, time.min)
+        )
 
-    if timezone.now() < end_time and profile.progress != 'posttest2':
-        return redirect(get_next_step(request.user))
+        if timezone.now() < end_time:
+            return redirect('core:dashboard')
 
     session, created = TestSession.objects.get_or_create(
         user=request.user,
         session_type='posttest2',
         defaults={'condition': profile.condition}
     )
+
     if created or not session.items.exists():
-        # For testing
-        #items = RPMItem.objects.filter(set_number=3).order_by('id')[:2]
-        # Proper version
         items = get_fixed_session_items('posttest2')
         session.items.set(items)
 
