@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 from django.contrib.auth.models import User
 from users.models import Profile
 import random
@@ -33,8 +33,12 @@ def get_next_step(user):
     elif progress == 'instruction':
         return 'core:dashboard'                     # free use starts
     elif progress == 'free_use':
-        # Check if 7 days have passed
-        if profile.free_use_started and timezone.now() >= profile.free_use_started + timedelta(minutes=1): #timedelta(days=7):
+        # Check if 4 days have passed
+        target_date = profile.free_use_started.date() + timedelta(days=3)
+        end_time = timezone.make_aware(
+            datetime.combine(target_date, time.min)
+        )
+        if profile.free_use_started and timezone.now() >= end_time:
             return 'tests:posttest2'
         return 'core:dashboard'
     elif progress == 'posttest2':
