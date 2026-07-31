@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import RPMItem, TestSession
 import json
-from datetime import datetime
+from datetime import datetime, time
 from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
 from datetime import date, timedelta
@@ -63,11 +63,27 @@ def start_training_page(request):
     """Page that only shows the start training button"""
     # Check if free-use period is over
     show_final_message = False
-    if request.user.profile.progress == 'free_use' and request.user.profile.free_use_started:
-        if timezone.now() >= request.user.profile.free_use_started + timedelta(minutes=1):
-            show_final_message = True
 
-    # return render(request, 'tests/start_training.html')
+    profile = request.user.profile
+
+    if profile.progress == 'free_use' and profile.free_use_started:
+        target_date = profile.free_use_started.date() + timedelta(days=3)
+        end_time = timezone.make_aware(
+            datetime.combine(target_date, time.min)
+        )
+
+        print(f"Time started: {profile.free_use_started.date()}")
+        print(f"Time target: {target_date}")
+        print(f"Time end: {end_time}")
+
+        now = timezone.now()
+        print(f"time now: {now}")
+
+        if now >= end_time:
+            show_final_message = True
+        else:
+            seconds_until_end = int((end_time - now).total_seconds())
+
     return render(request, 'tests/start_training.html', {
         'show_final_message': show_final_message,
     })
