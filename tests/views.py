@@ -385,6 +385,14 @@ def posttest2(request):
     if profile.progress not in ['free_use', 'posttest2']:
         return redirect(get_next_step(request.user))
 
+    target_date = profile.free_use_started.date() + timedelta(days=3)
+    end_time = timezone.make_aware(
+        datetime.combine(target_date, time.min)
+    )
+
+    if timezone.now() < end_time and profile.progress != 'posttest2':
+        return redirect(get_next_step(request.user))
+
     session, created = TestSession.objects.get_or_create(
         user=request.user,
         session_type='posttest2',
