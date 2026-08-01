@@ -58,11 +58,11 @@ def user_dashboard(request):
 
     if profile.progress == 'free_use' and profile.free_use_started:
         #end_time = profile.free_use_started + timedelta(minutes=1)
-        target_date = profile.free_use_started.date() + timedelta(days=3)   # 3 days to learn
+        target_date = profile.free_use_started + timedelta(days=3)   # 3 days to learn
         end_time = timezone.make_aware(
             datetime.combine(target_date, time.min)  # 00:00 Uhr
         )
-        print(f"Time started: {profile.free_use_started.date()}")
+        print(f"Time started: {profile.free_use_started}")
         print(f"Time target: {target_date}")
         print(f"Time end: {end_time}")
         now = timezone.now()

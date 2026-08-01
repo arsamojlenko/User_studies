@@ -67,12 +67,12 @@ def start_training_page(request):
     profile = request.user.profile
 
     if profile.progress == 'free_use' and profile.free_use_started:
-        target_date = profile.free_use_started.date() + timedelta(days=3)
+        target_date = profile.free_use_started + timedelta(days=3)
         end_time = timezone.make_aware(
             datetime.combine(target_date, time.min)
         )
 
-        print(f"Time started: {profile.free_use_started.date()}")
+        print(f"Time started: {profile.free_use_started}")
         print(f"Time target: {target_date}")
         print(f"Time end: {end_time}")
 
@@ -387,7 +387,7 @@ def posttest2(request):
         return redirect(get_next_step(request.user))
 
     if profile.progress == 'free_use':
-        target_date = profile.free_use_started.date() + timedelta(days=3)
+        target_date = profile.free_use_started + timedelta(days=3)
         end_time = timezone.make_aware(
             datetime.combine(target_date, time.min)
         )

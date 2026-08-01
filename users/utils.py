@@ -34,7 +34,7 @@ def get_next_step(user):
         return 'core:dashboard'                     # free use starts
     elif progress == 'free_use':
         # Check if 4 days have passed
-        target_date = profile.free_use_started.date() + timedelta(days=3)
+        target_date = profile.free_use_started + timedelta(days=3)
         end_time = timezone.make_aware(
             datetime.combine(target_date, time.min)
         )
